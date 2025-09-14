@@ -84,7 +84,7 @@ client.on('messageCreate', async (message) => {
           await message.member.setNickname(originalNickname, '画像を投稿したため、ニックネームをリセット');
           // リセットが完了したらMapから情報を削除
           originalNicknames.delete(message.author.id);
-          await message.channel.send(`**# それがおまえの答えかい？\n# 行きな！\n# お前の勝ちだ！早くいっちまいな！！\n# フン！**`);
+          await message.channel.send(`**それがおまえの答えかい？\n行きな！\nお前の勝ちだ！早くいっちまいな！！\nフン！**`);
         } else {
           // 元のニックネーム情報がない場合は何もしない
           console.log('元のニックネーム情報が見つかりませんでした。');
