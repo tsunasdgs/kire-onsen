@@ -1,6 +1,7 @@
 //必要なライブラリをインポート
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import 'dotenv/config';
+import http from 'http'; // httpモジュールを追加
 
 // 必要なIntentsを定義
 const client = new Client({
@@ -82,3 +83,15 @@ client.on('messageCreate', async (message) => {
 
 // .envファイルからDiscordトークンを使ってbotにログイン
 client.login(process.env.DISCORD_TOKEN);
+
+// ---
+// RenderのWebサービスがポートを監視できるように、シンプルなHTTPサーバーを起動します
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Discord Bot is running!');
+});
+
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Web server is listening on port ${port}`);
+});
