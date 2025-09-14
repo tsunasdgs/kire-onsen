@@ -18,6 +18,10 @@ const client = new Client({
 // ここをニックネームを戻したいチャンネルのIDに変更してください
 const NICKNAME_RESET_CHANNEL_ID = '1416289553639014461';
 
+// 変更前のニックネームを一時的に保存するためのMap
+// キー: ユーザーID, 値: 変更前のニックネーム
+const originalNicknames = new Map();
+
 // botが起動したときのイベント
 client.once('ready', () => {
   console.log(`Botが起動しました！ ${client.user.tag} としてログインしました。`);
@@ -39,9 +43,11 @@ client.on('messageCreate', async (message) => {
       
       // 1%から120%の切れ者確率をランダムで生成
       const probability = Math.floor(Math.random() * 120) + 1;
-      const newNickname = `切れ者確率${ probability}％`;
+      const newNickname = `切れ者確率${probability}％`;
       const originalName = message.author.displayName;
-
+      
+      // 変更前のニックネームをMapに保存
+      originalNicknames.set(message.author.id, originalName);
 
       // ニックネームの変更を試みる
       try {
@@ -72,8 +78,17 @@ client.on('messageCreate', async (message) => {
     if (message.attachments.size > 0) {
       // ユーザーのニックネームをリセット
       try {
-        await message.member.setNickname(null, '画像を投稿したため、ニックネームをリセット');
-        await message.channel.send(`**# それがおまえの答えかい？\n# 行きな！\n# お前の勝ちだ！早くいっちまいな！！\n# フン！**`);
+        // Mapから元のニックネームを取得
+        const originalNickname = originalNicknames.get(message.author.id);
+        if (originalNickname) {
+          await message.member.setNickname(originalNickname, '画像を投稿したため、ニックネームをリセット');
+          // リセットが完了したらMapから情報を削除
+          originalNicknames.delete(message.author.id);
+          await message.channel.send(`**# それがおまえの答えかい？\n# 行きな！\n# お前の勝ちだ！早くいっちまいな！！\n# フン！**`);
+        } else {
+          // 元のニックネーム情報がない場合は何もしない
+          console.log('元のニックネーム情報が見つかりませんでした。');
+        }
       } catch (error) {
         console.error('ニックネームのリセットに失敗しました:', error);
       }
