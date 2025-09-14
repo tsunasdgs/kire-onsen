@@ -16,7 +16,7 @@ const client = new Client({
 
 // ニックネームをリセットする特定のチャンネルIDを指定
 // ここをニックネームを戻したいチャンネルのIDに変更してください
-const NICKNAME_RESET_CHANNEL_ID = '1416282550648700958';
+const NICKNAME_RESET_CHANNEL_ID = '1416289553639014461';
 
 // botが起動したときのイベント
 client.once('ready', () => {
@@ -39,7 +39,7 @@ client.on('messageCreate', async (message) => {
       
       // 1%から120%の切れ者確率をランダムで生成
       const probability = Math.floor(Math.random() * 120) + 1;
-      const newNickname = `切れ者確率${probability}％`;
+      const newNickname = `切れ者確率${ probability}％`;
       const originalName = message.author.displayName;
 
 
